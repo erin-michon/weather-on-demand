@@ -12,3 +12,28 @@ THEN I am presented with a 5-day forecast that displays the date, an icon repres
 WHEN I click on a city in the search history
 THEN I am again presented with current and future conditions for that city   */
 
+
+let getCurrentWeather = function(city) {
+    // format the api url   "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8"
+    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=detroit&appid=451c5c4eda0758c7a53f2fee96ca99f8";
+ 
+    // make a get request to url
+    fetch(apiUrl)
+      .then(function(response) {
+        // request was successful
+        if (response.ok) {
+          console.log(response);
+          response.json().then(function(data) {
+            console.log(data);
+            
+          });
+        } else {
+          alert("Error: " + response.statusText);
+        }
+      })
+      .catch(function(error) {
+        alert("Unable to connect to Open Weather");
+      });
+  };
+
+getCurrentWeather();
