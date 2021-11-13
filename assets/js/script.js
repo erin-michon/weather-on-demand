@@ -14,14 +14,20 @@ THEN I am again presented with current and future conditions for that city
 
 */
 // **  VARIABLES **
+const date = new Date();
+const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
+let currentDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
 let currentWeather;
 let cityLat;
 let cityLon;
 
+console.log(currentDate);
+
 
 let getCurrentWeather = function(city) {
-  // format the api url   "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8"  "https://api.openweathermap.org/data/2.5/weather?q=detroit&appid=451c5c4eda0758c7a53f2fee96ca99f8"
-  var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=detroit&appid=451c5c4eda0758c7a53f2fee96ca99f8";
+  // format the api url   "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8"  "https://api.openweathermap.org/data/2.5/weather?q=detroit&appid=451c5c4eda0758c7a53f2fee96ca99f8"
+  var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=detroit&units=imperial&appid=451c5c4eda0758c7a53f2fee96ca99f8";
+
  
   // make a get request to url
   fetch(apiUrl)
@@ -36,17 +42,17 @@ let getCurrentWeather = function(city) {
         cityLat = data.coord.lat;
         cityLon = data.coord.lon;
         
-        getFutureWeather(cityLat,cityLon);
-
-        console.log(cityLat);
-        console.log(cityLon);
-        
+               
         //send data to displayCurrentWeather based on avail info
         console.log(data.name);
+        console.log(currentDate);
+        console.log("http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
         console.log(data.main.temp);
         console.log(data.main.humidity);
         console.log(data.wind.speed);
-        console.log(data);
+        console.log(data);     
+        
+        getFutureWeather(cityLat,cityLon);
         
       });
 
@@ -57,11 +63,14 @@ let getCurrentWeather = function(city) {
   .catch(function(error) {
     alert("Unable to connect to Open Weather");
   });
+
+  
+
 };
 
 let getFutureWeather = function(lat, lon) {
   // format the api url  using info from first fetch (passed through fxn)
-  var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&exclude=hourly,daily&appid=451c5c4eda0758c7a53f2fee96ca99f8";
+  var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + cityLat + "&lon=" + cityLon + "&units=imperial&exclude=minutely,hourly,alerts&appid=451c5c4eda0758c7a53f2fee96ca99f8";
  
   // make a get request to url
   fetch(apiUrl)
@@ -72,7 +81,21 @@ let getFutureWeather = function(lat, lon) {
       //return the json object of the data requested
       response.json().then(function(data) {
         
+        //currentWeather data
+        console.log(data.current.uvi);
+
+        //futureWeather data
         console.log(data);
+        console.log(currentDate);
+        console.log(data.daily[1].weather[0].icon);
+        console.log(data.daily[1].temp.day);
+        console.log(data.daily[1].humidity);
+        console.log(data.daily[1].wind_speed);
+        console.log(data);
+
+        for (var i = 1; i < (data.daily.length -2); i++) {
+
+        }        
         
       });
 
