@@ -13,20 +13,39 @@ WHEN I click on a city in the search history
 THEN I am again presented with current and future conditions for that city   
 
 */
+
 // **  VARIABLES **
-const date = new Date();
-const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()];
-let currentDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear();
+let userFormEl = document.querySelector("#search-form");
+let cityInputEl = document.querySelector("#city");
+
 let currentWeather;
 let cityLat;
 let cityLon;
 
-console.log(currentDate);
+let formSubmitHandler = function(event) {
+  // prevent page from refreshing
+  event.preventDefault();
+
+  //get value from input element
+  let city = cityInputEl.value.trim();
+
+  console.log(city);
+
+  if (city) {
+    getCurrentWeather(city);
+
+    //clear old content
+    cityInputEl.value = "";
+
+  }else{
+    alert("Please enter a city name");
+  }
+}
 
 
 let getCurrentWeather = function(city) {
-  // format the api url   "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8"  "https://api.openweathermap.org/data/2.5/weather?q=detroit&appid=451c5c4eda0758c7a53f2fee96ca99f8"
-  var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=detroit&units=imperial&appid=451c5c4eda0758c7a53f2fee96ca99f8";
+  // format the api url   
+  var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8";
 
  
   // make a get request to url
@@ -41,11 +60,10 @@ let getCurrentWeather = function(city) {
         //requested city lattitude and longitude - needs to be sent to second api fetch for future forecast info and uv index
         cityLat = data.coord.lat;
         cityLon = data.coord.lon;
-        
-               
+                    
         //send data to displayCurrentWeather based on avail info
         console.log(data.name);
-        console.log(currentDate);
+        console.log(data.dt);
         console.log("http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
         console.log(data.main.temp);
         console.log(data.main.humidity);
@@ -63,8 +81,6 @@ let getCurrentWeather = function(city) {
   .catch(function(error) {
     alert("Unable to connect to Open Weather");
   });
-
-  
 
 };
 
@@ -86,7 +102,7 @@ let getFutureWeather = function(lat, lon) {
 
         //futureWeather data
         console.log(data);
-        console.log(currentDate);
+        console.log(data.daily[1].dt);
         console.log(data.daily[1].weather[0].icon);
         console.log(data.daily[1].temp.day);
         console.log(data.daily[1].humidity);
@@ -94,6 +110,12 @@ let getFutureWeather = function(lat, lon) {
         console.log(data);
 
         for (var i = 1; i < (data.daily.length -2); i++) {
+
+          console.log(data.daily[i].dt)
+          console.log(data.daily[i].weather[0].icon);
+          console.log(data.daily[i].temp.day);
+          console.log(data.daily[i].humidity);
+          console.log(data.daily[i].wind_speed);
 
         }        
         
@@ -108,12 +130,11 @@ let getFutureWeather = function(lat, lon) {
   });
 };
 
-
-
-/* 
-let displayCurrentWeather = function(data, city) {
+/*
+ 
+let displayCurrentWeather = function(data, searchTerm ) {
   // check if api returned any results
-  if (city.length === 0) {
+  if (data.length === 0) {
     repoContainerEl.textContent = "No information found.";
     return;
   }
@@ -159,10 +180,7 @@ let displayCurrentWeather = function(data, city) {
 */
 
 
-
-
-getCurrentWeather();
-
-
+// add event listeners to forms
+userFormEl.addEventListener("submit", formSubmitHandler);
 
 
