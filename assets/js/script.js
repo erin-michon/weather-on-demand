@@ -1,19 +1,3 @@
-/*
-** ACCEPTANCE CRITERIA **
-GIVEN a weather dashboard with form inputs
-WHEN I search for a city
-THEN I am presented with current and future conditions for that city and that city is added to the search history
-WHEN I view current weather conditions for that city
-THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, the wind speed, and the UV index
-WHEN I view the UV index
-THEN I am presented with a color that indicates whether the conditions are favorable, moderate, or severe
-WHEN I view future weather conditions for that city
-THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
-WHEN I click on a city in the search history
-THEN I am again presented with current and future conditions for that city   
-
-*/
-
 // **  VARIABLES **
 let userFormEl = document.querySelector("#search-form");
 let cityInputEl = document.querySelector("#city");
@@ -22,19 +6,17 @@ let currentDayContainerEl = document.querySelector("#current-day-container");
 let currentWeatherContainerEl = document.querySelector("#current-weather-container");
 let futureWeatherContainerEl = document.querySelector("#future-weather-container");
 let searchedCitiesEl = document.querySelector("#searched-cities");
-
-
 let currentWeather;
 let cityLat;
 let cityLon;
 let city;
-
 let searchedCities = [];
 
 // ** TIME CONVERSION **
 let today = moment().format("L")
 console.log(today); 
 
+// ** FORM HANDLERS **
 let formSubmitHandler = function(event) {
   // prevent page from refreshing
   event.preventDefault();
@@ -73,14 +55,12 @@ let formSubmitHandler = function(event) {
   }
 }
 
-// ** SAVE FUNCTION ** 
-// Saves searched cities to local.Storage
+// ** SAVE FUNCTION - saving to local.Storage
 let saveCities = function() { 
     localStorage.setItem("searchedCities", JSON.stringify(searchedCities));
 };
 
-// ** LOAD STORAGE FUNCTION ** 
-// Loads the previously searched cities when the browser is refreshed
+// ** LOAD STORAGE FUNCTION - Loads the previously searched cities when the browser is refreshed
 var loadCities = function() {
   //get data from localStorage
   searchedCities = localStorage.getItem("searchedCities", searchedCities);
@@ -104,6 +84,7 @@ var loadCities = function() {
    
 };   
 
+//  ** FUNCTIONS TO FETCH API DATA
 let getCurrentWeather = function(city) {
   // format the api url   
   var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial&appid=" + "451c5c4eda0758c7a53f2fee96ca99f8";
@@ -163,9 +144,10 @@ let getFutureWeather = function(lat, lon) {
   });
 };
 
+// ** FUNCTIONS TO DISPLAY DATA
 let displayCurrentWeather = function(data, city) {
 
-  currentWeatherContainerEl.classList= "current-weather border";
+  currentWeatherContainerEl.classList= "current-weather current-border";
 
   // create elements and populate for current date
   let titleEl = document.createElement("div");
@@ -263,9 +245,9 @@ let displayFutureWeather = function(data) {
 
 };
 
-// add event listeners to forms
+// **EVENT LISTENERS
 userFormEl.addEventListener("submit", formSubmitHandler);
 
-// function call for local.storage
+// **FUNCTION CALLS
 // loadCities();
 

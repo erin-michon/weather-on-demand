@@ -1,10 +1,16 @@
 header {
-    background-color: blue;
+    background-color: rgb(47, 47, 196);
     color: white;
+    text-align: center;
+    padding: 2px;
 }
 
-.border {
-    border: 2px solid black;
+.current-border {
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    margin: 3px;
+    padding: 3px;
 }
 
 .current-day-title {
@@ -26,6 +32,9 @@ header {
 .five-day-title {
     font-weight: bolder;
     font-size: 32px;
+}
+.five-day{
+    margin: 0px 0px 5px 0px;
 }
 
 .day-info {
