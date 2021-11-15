@@ -4,49 +4,75 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="./assets/css/style.css" />
     <title>Weather Dashboard</title>
 </head>
+
 <body>
 
-    <header>
+    <header class = "container-fluid">
         <h1>Weather Dashboard</h1>
     </header>
 
-    <aside>
+    <div class = "row">
 
-        <form id="search-form">
-            <h2>Search for a City:</h2>
-            <div class="form-group">
-            <input type="text" name="city-search" id="city" placeholder="New York City"/>
+        <aside class = "col-2">
+
+            <form id="search-form" class="search-form container">
+                <h2>Search for a City:</h2>
+                <div class="form-group">
+                <input class = "col-12" type="text" name="city-search" id="city" placeholder="New York City"/>
+                </div>
+
+                <div class="form-group">
+                <button class="search-btn btn col-12" id="search-btn" type="submit">Search</button>
+                </div>
+
+            </form>
+
+            <div class="searched-cities container">
+                <!-- Dynamically Created buttons for previously searched cites go here -->
+                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
+                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
+                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
+                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
+                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
             </div>
 
-            <div class="form-group">
-            <button class="btn" id="search-btn" type="submit">Search</button>
+        </aside>
+
+        <main class = "col-10" id="weather-results">
+
+            <div class="current-weather" id="current-weather-container">
+
+                <div class="current-day" id ="current-day-container">
+                    <!-- dynamically create the current day forecast here -->   
+
+                </div>
+
             </div>
 
-        </form>
+            <div class="future-weather" id="future-weather-container">
 
-        <div class="searched-cities">
-            <!-- Dynamically Created buttons for previously searched cites go here -->
-        </div>
+            </div>
+            
+            <div class ="">
 
-    </aside>
+                <div id="five-day-container" class="five-day row justify-content-around">
+                <!-- iterate through to dynamically create the five day forecast here -->        
 
-    <main id="weather-results">
+                </div>
 
-        <div class="current-weather-container">
-
-
-        </div>
-
-        <div class="future-weather-container">
+            </div>
 
 
-        </div>
+        </main>
 
-    </main>
+    </div>
 
-    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="./assets/js/script.js"></script> 
 </body>
 </html>

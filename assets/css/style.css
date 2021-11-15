@@ -1,0 +1,51 @@
+header {
+    background-color: blue;
+    color: white;
+}
+
+.border {
+    border: 2px solid black;
+}
+
+.current-day-title {
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.date-block {
+    background-color: rgb(12, 58, 88);
+    color: white;
+    padding: 5px;
+    margin: 10px;
+}
+
+.date-block div {
+    padding: 10px 0px 10px 0px;
+}
+
+.five-day-title {
+    font-weight: bolder;
+    font-size: 32px;
+}
+
+.day-info {
+    padding: 10px 0px 10px 0px;
+    font-size:larger;
+    font-weight: bold;
+}
+
+.search-btn {
+    background-color: rgb(36, 119, 187);
+    color: white;
+    margin: 10px 0px;
+}
+
+.search-form {
+    border-bottom: 3px solid grey;
+}
+
+.storage-btn {
+    background-color: lightgrey;
+    color: black;
+    margin: 10px 0px;
+}

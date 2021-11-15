@@ -17,10 +17,20 @@ THEN I am again presented with current and future conditions for that city
 // **  VARIABLES **
 let userFormEl = document.querySelector("#search-form");
 let cityInputEl = document.querySelector("#city");
+let fiveDayContainerEl = document.querySelector("#five-day-container");
+let currentDayContainerEl = document.querySelector("#current-day-container");
+let currentWeatherContainerEl = document.querySelector("#current-weather-container");
+let futureWeatherContainerEl = document.querySelector("#future-weather-container");
+
 
 let currentWeather;
 let cityLat;
 let cityLon;
+let city;
+
+// ** TIME CONVERSION **
+let today = moment().format("L")
+console.log(today); 
 
 let formSubmitHandler = function(event) {
   // prevent page from refreshing
@@ -29,13 +39,15 @@ let formSubmitHandler = function(event) {
   //get value from input element
   let city = cityInputEl.value.trim();
 
-  console.log(city);
-
   if (city) {
     getCurrentWeather(city);
 
     //clear old content
     cityInputEl.value = "";
+    currentDayContainerEl.innerHTML="";
+    fiveDayContainerEl.innerHTML="";
+    currentWeatherContainerEl.innerHTML="";
+    futureWeatherContainerEl.innerHTML="";
 
   }else{
     alert("Please enter a city name");
@@ -53,7 +65,6 @@ let getCurrentWeather = function(city) {
   .then(function(response) {
     // request was successful
     if (response.ok) {
-      console.log(response);
       //return the json object of the data requested
       response.json().then(function(data) {
         
@@ -62,15 +73,8 @@ let getCurrentWeather = function(city) {
         cityLon = data.coord.lon;
                     
         //send data to displayCurrentWeather based on avail info
-        console.log(data.name);
-        console.log(data.dt);
-        console.log("http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png");
-        console.log(data.main.temp);
-        console.log(data.main.humidity);
-        console.log(data.wind.speed);
-        console.log(data);     
-        
         getFutureWeather(cityLat,cityLon);
+        displayCurrentWeather(data, city);
         
       });
 
@@ -93,33 +97,13 @@ let getFutureWeather = function(lat, lon) {
   .then(function(response) {
     // request was successful
     if (response.ok) {
-      console.log(response);
       //return the json object of the data requested
       response.json().then(function(data) {
         
-        //currentWeather data
-        console.log(data.current.uvi);
+        //Initiate future weather data function
+        displayFutureWeather(data);
 
-        //futureWeather data
-        console.log(data);
-        console.log(data.daily[1].dt);
-        console.log(data.daily[1].weather[0].icon);
-        console.log(data.daily[1].temp.day);
-        console.log(data.daily[1].humidity);
-        console.log(data.daily[1].wind_speed);
-        console.log(data);
-
-        for (var i = 1; i < (data.daily.length -2); i++) {
-
-          console.log(data.daily[i].dt)
-          console.log(data.daily[i].weather[0].icon);
-          console.log(data.daily[i].temp.day);
-          console.log(data.daily[i].humidity);
-          console.log(data.daily[i].wind_speed);
-
-        }        
-        
-      });
+      });     
 
     } else {
       
@@ -130,55 +114,105 @@ let getFutureWeather = function(lat, lon) {
   });
 };
 
-/*
+let displayCurrentWeather = function(data, city) {
+
+  currentWeatherContainerEl.classList= "current-weather border";
+
+  // create elements and populate for current date
+  var titleEl = document.createElement("div");
+  titleEl.classList = "current-day-title";
+  titleEl.textContent = city + " (" + today + ") ";
+  let titleImgEl = document.createElement("img");
+  imgIcon = data.weather[0].icon;
+  titleImgEl.setAttribute("src", "http://openweathermap.org/img/wn/" + imgIcon + "@2x.png" );
+  currentDayContainerEl.appendChild(titleEl);
+  titleEl.appendChild(titleImgEl);
  
-let displayCurrentWeather = function(data, searchTerm ) {
+  var tempEl = document.createElement("div"); 
+  tempEl.classList = "day-info";
+  tempEl.textContent = "Temp: " + data.main.temp + " °F"
+  currentDayContainerEl.appendChild(tempEl)
+  
+  var windEl = document.createElement("div"); 
+  windEl.classList = "day-info";
+  windEl.textContent = "Wind: " + data.wind.speed + " MPH";
+  currentDayContainerEl.appendChild(windEl)
+  
+  var humidityEl = document.createElement("div"); 
+  humidityEl.classList = "day-info";
+  humidityEl.textContent = "Humidity: " + data.main.humidity + "%";
+  currentDayContainerEl.appendChild(humidityEl);
+
+  // append container to the dom
+  currentWeatherContainerEl.appendChild(currentDayContainerEl);
+
+};
+
+let displayFutureWeather = function(data) {
   // check if api returned any results
-  if (data.length === 0) {
-    repoContainerEl.textContent = "No information found.";
+  if (data.daily.length === 0) {
+    alert("No weather information found.");
     return;
   }
 
-  citySearchTerm.textContent = searchTerm;
+  //get and attach uv element to today's weather section
+  var uvEl = document.createElement("div");
+  uvEl.classList = "uv day-info";
+  uvEl.textContent = "UV Index: " + data.current.uvi;
+  currentWeatherContainerEl.appendChild(uvEl);
+
+  //create and display title
+  var futureTitleEl = document.createElement("div");
+  futureTitleEl.classList = "five-day-title";
+  futureTitleEl.textContent = "5-Day Forecast";
+  futureWeatherContainerEl.appendChild(futureTitleEl);
+
 
   // display currentWeather data
-  for (var i = 0; i < repos.length; i++) {
-    // format repo name
-    var repoName = repos[i].owner.login + "/" + repos[i].name;
+  for (var i = 1; i < (data.daily.length - 2); i++) {
 
-    // create a link for each repo
-    var repoEl = document.createElement("a");
-    repoEl.classList = "list-item flex-row justify-space-between align-center";
-    repoEl.setAttribute("href", "./single-repo.html?repo=" + repoName);
+    // format dateBlock name
+    var dateBlock = moment().add(i, 'days').format("L");
 
-    // create a span element to hold repository name
-    var titleEl = document.createElement("span");
-    titleEl.textContent = repoName;
+    // create a div and title for each dayblock
+    var dayEl = document.createElement("div");
+    dayEl.classList = "date-block card col";
+    var titleEl = document.createElement("h4");
+    titleEl.textContent = dateBlock;
 
     // append to container
-    repoEl.appendChild(titleEl);
+    dayEl.appendChild(titleEl);
 
-    // create a status element
-    var statusEl = document.createElement("span");
-    statusEl.classList = "flex-row align-center";
+    // create an image element
+    var imgEl = document.createElement("img");
+    imgEl.classList = "weather-icon col-2";
+    imgIcon = data.daily[i].weather[0].icon
+    imgEl.setAttribute("src", "http://openweathermap.org/img/wn/" + imgIcon + "@2x.png" );
+    
+    //append to container
+    dayEl.appendChild(imgEl);
 
-    // check if current repo has issues or not
-    if (repos[i].open_issues_count > 0) {
-      statusEl.innerHTML =
-        "<i class='fas fa-times status-icon icon-danger'></i>" + repos[i].open_issues_count + " issue(s)";
-    } else {
-      statusEl.innerHTML = "<i class='fas fa-check-square status-icon icon-success'></i>";
-    }
+    // create remaining weather info
+    var tempEl = document.createElement("div");
+    tempEl.classList = "day-temp card-text";
+    tempEl.textContent = "Temp: " + data.daily[1].temp.day + " °F"
+    dayEl.appendChild(tempEl)
 
-    // append to container
-    repoEl.appendChild(statusEl);
+    var windEl = document.createElement("div"); 
+    windEl.classList = "day-wind card-text";
+    windEl.textContent = "Wind: " + data.daily[1].wind_speed + " MPH";
+    dayEl.appendChild(windEl)
+
+    var humidityEl = document.createElement("div"); 
+    humidityEl.classList = "day-humidity card-text";
+    humidityEl.textContent = "Humidity: " + data.daily[i].humidity + "%";
+    dayEl.appendChild(humidityEl)
 
     // append container to the dom
-    repoContainerEl.appendChild(repoEl);
+    fiveDayContainerEl.appendChild(dayEl);
   }
-};
-*/
 
+};
 
 // add event listeners to forms
 userFormEl.addEventListener("submit", formSubmitHandler);
