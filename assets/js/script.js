@@ -21,12 +21,15 @@ let fiveDayContainerEl = document.querySelector("#five-day-container");
 let currentDayContainerEl = document.querySelector("#current-day-container");
 let currentWeatherContainerEl = document.querySelector("#current-weather-container");
 let futureWeatherContainerEl = document.querySelector("#future-weather-container");
+let searchedCitiesEl = document.querySelector("#searched-cities");
 
 
 let currentWeather;
 let cityLat;
 let cityLon;
 let city;
+
+let searchedCities = [];
 
 // ** TIME CONVERSION **
 let today = moment().format("L")
@@ -40,20 +43,66 @@ let formSubmitHandler = function(event) {
   let city = cityInputEl.value.trim();
 
   if (city) {
+
     getCurrentWeather(city);
 
     //clear old content
-    cityInputEl.value = "";
     currentDayContainerEl.innerHTML="";
     fiveDayContainerEl.innerHTML="";
     currentWeatherContainerEl.innerHTML="";
     futureWeatherContainerEl.innerHTML="";
+    cityInputEl.value = "";
 
+    if(searchedCities.indexOf(city) === -1) {
+      
+      searchedCities.push(city);
+      let searchedCityBtn = document.createElement("button");
+      searchedCityBtn.classList="storage-btn btn col-12";
+      searchedCityBtn.textContent= city;
+      searchedCitiesEl.appendChild(searchedCityBtn);
+
+      console.log(searchedCities);
+      
+      saveCities();
+      
+    }
+
+    
   }else{
     alert("Please enter a city name");
   }
 }
 
+// ** SAVE FUNCTION ** 
+// Saves searched cities to local.Storage
+let saveCities = function() { 
+    localStorage.setItem("searchedCities", JSON.stringify(searchedCities));
+};
+
+// ** LOAD STORAGE FUNCTION ** 
+// Loads the previously searched cities when the browser is refreshed
+var loadCities = function() {
+  //get data from localStorage
+  searchedCities = localStorage.getItem("searchedCities", searchedCities);
+
+  //check to see if anything exists:
+  if (!searchedCities) {
+      return false;
+    }
+  
+  //turn it back into an object
+  searchedCities = JSON.parse(searchedCities);
+
+  //iterate through the searchedCities Array and create/append buttons
+  for (let i = 0; i < searchedCities.length; i++) {
+         
+    let searchedCityBtn = document.createElement("button");
+    searchedCityBtn.classList="storage-btn btn col-12";
+    searchedCityBtn.textContent= searchedCities[i];
+    searchedCitiesEl.appendChild(searchedCityBtn);
+  }
+   
+};   
 
 let getCurrentWeather = function(city) {
   // format the api url   
@@ -119,7 +168,7 @@ let displayCurrentWeather = function(data, city) {
   currentWeatherContainerEl.classList= "current-weather border";
 
   // create elements and populate for current date
-  var titleEl = document.createElement("div");
+  let titleEl = document.createElement("div");
   titleEl.classList = "current-day-title";
   titleEl.textContent = city + " (" + today + ") ";
   let titleImgEl = document.createElement("img");
@@ -128,12 +177,12 @@ let displayCurrentWeather = function(data, city) {
   currentDayContainerEl.appendChild(titleEl);
   titleEl.appendChild(titleImgEl);
  
-  var tempEl = document.createElement("div"); 
+  let tempEl = document.createElement("div"); 
   tempEl.classList = "day-info";
   tempEl.textContent = "Temp: " + data.main.temp + " °F"
   currentDayContainerEl.appendChild(tempEl)
   
-  var windEl = document.createElement("div"); 
+  let windEl = document.createElement("div"); 
   windEl.classList = "day-info";
   windEl.textContent = "Wind: " + data.wind.speed + " MPH";
   currentDayContainerEl.appendChild(windEl)
@@ -217,4 +266,6 @@ let displayFutureWeather = function(data) {
 // add event listeners to forms
 userFormEl.addEventListener("submit", formSubmitHandler);
 
+// function call for local.storage
+// loadCities();
 

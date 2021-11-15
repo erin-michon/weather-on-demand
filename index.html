@@ -16,9 +16,7 @@
     </header>
 
     <div class = "row">
-
         <aside class = "col-2">
-
             <form id="search-form" class="search-form container">
                 <h2>Search for a City:</h2>
                 <div class="form-group">
@@ -31,44 +29,29 @@
 
             </form>
 
-            <div class="searched-cities container">
+            <div id ="searched-cities" class="searched-cities container">
                 <!-- Dynamically Created buttons for previously searched cites go here -->
-                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
-                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
-                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
-                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
-                <button class="storage-btn btn col-12" id="city-btn" type="submit">Searched City</button>
             </div>
-
         </aside>
 
         <main class = "col-10" id="weather-results">
-
             <div class="current-weather" id="current-weather-container">
-
                 <div class="current-day" id ="current-day-container">
                     <!-- dynamically create the current day forecast here -->   
-
                 </div>
-
             </div>
 
             <div class="future-weather" id="future-weather-container">
-
             </div>
             
             <div class ="">
 
                 <div id="five-day-container" class="five-day row justify-content-around">
                 <!-- iterate through to dynamically create the five day forecast here -->        
-
                 </div>
 
             </div>
-
-
         </main>
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
